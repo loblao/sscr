@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+.formula_box
+{
+    display: inline-block;
+    border: 1px solid black;
+    background-color: #F2F802;
+    background-clip: padding-box;
+    padding: 2px;
+}
+        </style>
+        <title>%(title)s</title>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
+        <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="https://wzrd.in/standalone/function-plot@1.16.4"></script>
+        <script type="text/javascript">
+%(s2dData)s
+    </script>
+   
+    </head>
+    <body>
+%(body)s
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+    </body>
+</html>
