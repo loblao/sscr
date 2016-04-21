@@ -1,0 +1,2 @@
+# sscr
+SchoolScript
