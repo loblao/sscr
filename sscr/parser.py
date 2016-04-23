@@ -7,7 +7,6 @@ import sys
 class Parser:
     MODE_NONE = 0
     MODE_LIST = 1
-    MODE_TABLE = 2
 
     def __init__(self, output):
         self.output = output
@@ -154,6 +153,56 @@ class Parser:
             self._mode = self.MODE_NONE
             self.output.addRaw('</ul>')
             
+        elif self._verifyCmd(cmd, 'table', args, 1, None):
+            args = shlex.split(args)
+            cols = args
+            
+            self.output.addRaw('<table border=1><tr>')
+            for col in cols:
+                self.output.addRaw('<td>')
+                self.output.addP(col)
+                self.output.addRaw('</td>')
+                
+            self.output.addRaw('</tr>')
+                
+            for line in self.__extractBlock('!table'):
+                row = shlex.split(line)
+                if len(row) != len(cols):
+                    self.error(ValueError('the table has %d cols, however %d were given' % (len(cols), len(row))))
+                    
+                self.output.addRaw('<tr>')
+                for value in row:
+                    self.output.addRaw('<td>')
+                    self.output.addP(value)
+                    self.output.addRaw('</td>')
+                
+                self.output.addRaw('</tr>')
+                
+        elif self._verifyCmd(cmd, 'table2', args, 1, None):
+            args = shlex.split(args)
+            cols = args
+            
+            self.output.addRaw('<table border=1><tr>')
+            for col in cols:
+                self.output.addRaw('<td>')
+                self.output.addP(col, doFormat=True)
+                self.output.addRaw('</td>')
+                
+            self.output.addRaw('</tr>')
+                
+            for line in self.__extractBlock('!table'):
+                row = shlex.split(line)
+                if len(row) != len(cols):
+                    self.error(ValueError('the table has %d cols, however %d were given' % (len(cols), len(row))))
+                    
+                self.output.addRaw('<tr>')
+                for value in row:
+                    self.output.addRaw('<td>')
+                    self.output.addP(value, doFormat=True)
+                    self.output.addRaw('</td>')
+                
+                self.output.addRaw('</tr>')
+            
         elif self._verifyCmd(cmd, 'plot', args, 1, None, False):
             self.output.addPlot(args)
             
@@ -163,39 +212,45 @@ class Parser:
             
         elif self._verifyCmd(cmd, 'plotmult', args, 0, 0):
             plots = []
-            blockStarted = False
-            while True:
-                try:
-                    line = next(self.__stream)
-            
-                except StopIteration:
-                    self.error(EOFError('unexpected EOF'))
-            
-                self._line += 1
-                line = line.strip('\r\n')
-
-                if not blockStarted:
-                    if line.strip() != '{':
-                        self.error('!plotmult requires a block')
-                        
-                    blockStarted = True
-                    continue
-                    
-                elif line.strip() == '}':
-                    break
-                   
-                if not line.strip():
-                    continue
-
-                if line.startswith('//'):
-                    continue
-                    
-                plots.append(self.__parsePlotExtArgs(line))
+            for line in self.__extractBlock('!plotmult'):
+                plot = self.__parsePlotExtArgs(line)
+                plots.append(plot)
             
             self.output.addPlotMult(plots)
 
         else:
             self.error(RuntimeError('%s is not a valid command!' % cmd))
+            
+    def __extractBlock(self, command, processComments=True):        
+        blockStarted = False
+        while True:
+            try:
+                line = next(self.__stream)
+
+            except StopIteration:
+                self.error(EOFError('unexpected EOF'))
+
+            self._line += 1
+            line = line.strip('\r\n')
+
+            if not blockStarted:
+                if line.strip() != '{':
+                    self.error('%s requires a block' % command)
+
+                blockStarted = True
+                continue
+
+            elif line.strip() == '}':
+                break
+
+            if processComments:
+                if not line.strip():
+                    continue
+
+                if line.startswith('//'):
+                    continue
+
+            yield line
             
     def __parsePlotExtArgs(self, args):
         args = shlex.split(args)
@@ -231,27 +286,7 @@ class Parser:
                 self.error(ValueError('s2d requires 2 integers!'))
                 
             block = ''
-            blockStarted = False
-            while True:
-                try:
-                    line = next(self.__stream)
-            
-                except StopIteration:
-                    self.error(EOFError('unexpected EOF'))
-            
-                self._line += 1
-                line = line.strip('\r\n')
-
-                if not blockStarted:
-                    if line.strip() != '{':
-                        self.error('+s2d requires a block')
-                        
-                    blockStarted = True
-                    continue
-                    
-                elif line.rstrip() == '}':
-                    break
-
+            for line in self.__extractBlock('+s2d', False):
                 block += line + '\n'
                 
             self.output.addRaw('''
@@ -280,13 +315,13 @@ class Parser:
                 
                 if minArgs != maxArgs:
                     if maxArgs and len(split) > maxArgs:
-                        raise TypeError('!%s takes at most %d arguments (%d given)' % (cmd.upper(), maxArgs, len(split)))
+                        raise TypeError('!%s takes at most %d argument(s) (%d given)' % (cmd.upper(), maxArgs, len(split)))
                         
                     elif minArgs and len(split) < minArgs:
-                        raise TypeError('!%s takes at least %d arguments (%d given)' % (cmd.upper(), minArgs, len(split)))
+                        raise TypeError('!%s takes at least %d argument(s) (%d given)' % (cmd.upper(), minArgs, len(split)))
                 
                 elif len(split) != maxArgs:
-                    raise TypeError('!%s takes exactly %d arguments (%d given)' % (cmd.upper(), maxArgs, len(split)))
+                    raise TypeError('!%s takes exactly %d argument(s) (%d given)' % (cmd.upper(), maxArgs, len(split)))
                     
         except TypeError as e:
             self.error(e)

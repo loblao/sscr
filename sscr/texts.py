@@ -106,39 +106,6 @@ def formatText(text):
 
     text = o
 
-    # {x} -> <b></b>
-    o = ''
-    flag = 0
-    i = -1
-    while i + 1 < len(text):
-        i += 1
-        x = text[i]
-        
-        if x == '$':
-            i += 1
-            o += '$'
-            while i < len(text):
-                o += text[i]
-                i += 1
-                if o[-1] == '$':
-                    i -= 1
-                    break
-
-            continue
-            
-        if x == '{' and not flag:
-            o += '<b>'
-            flag = 1
-
-        elif x == '}' and flag:
-            o += '</b>'
-            flag = 0
-
-        else:
-            o += x
-
-    text = o
-
     # [x] -> <i></i>
     o = ''
     flag = 0
@@ -170,7 +137,7 @@ def formatText(text):
         else:
             o += x
 
-    #text = o
+    text = o
     
     # |color|X| -> <span style="color: X">X</span>
     o = ''
