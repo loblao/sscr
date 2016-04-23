@@ -76,7 +76,7 @@ class Scene3D:
                 else:
                     dist = showDist
 
-                self.text(midPoint, dist).setScale(.4)
+                self.text(midPoint, dist).setScale(.6)
 
         return np
         
@@ -120,7 +120,7 @@ class Scene3D:
     
     def point(self, pos, name):
         self.sphere(pos, .1, C_RED)
-        self.text(Point3(pos) + (.1, 0, .3), name).setScale(.6)
+        self.text(Point3(pos) + (.1, 0, .3), name).setScale(.75)
     
 class Dihedral(NodePath):
     def __init__(self, pos, ang, size=10):
@@ -144,7 +144,7 @@ class Dihedral(NodePath):
         planeB.wrtReparentTo(self)
 
         ind = scene.text((0, .2, .2), 'Dihedral (%d deg)' % self.ang, color=C_WHITE)
-        ind.setScale(.5)
+        ind.setScale(.55)
         
     def renderBisector(self, scene, alpha=.75):
         ang = self.ang / 2
@@ -157,7 +157,7 @@ class Dihedral(NodePath):
         plane.wrtReparentTo(self)
         
         ind = scene.text((x, size / 2.0, y), 'Bisector', color=C_WHITE)
-        ind.setScale(.5)
+        ind.setScale(.55)
         
     def getPointOnSurface(self, planeIndex, dist, y=None, scene=None):
         if y is None:
