@@ -178,6 +178,8 @@ class Parser:
                 
                 self.output.addRaw('</tr>')
                 
+            self.output.addRaw('</table>')
+                
         elif self._verifyCmd(cmd, 'table2', args, 1, None):
             args = shlex.split(args)
             cols = args
@@ -202,6 +204,8 @@ class Parser:
                     self.output.addRaw('</td>')
                 
                 self.output.addRaw('</tr>')
+                
+            self.output.addRaw('</table>')
             
         elif self._verifyCmd(cmd, 'plot', args, 1, None, False):
             self.output.addPlot(args)
