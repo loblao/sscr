@@ -1,4 +1,4 @@
-from sscr import equations, texts
+from sscr import equations, texts, s3d
 
 import datetime
 import shlex
@@ -301,6 +301,16 @@ class Parser:
                 %(block)s
             </script>
             ''' % locals())
+            
+        elif script == 's3d':
+            if len(args):
+                self.error(TypeError('s3d takes no arguments'))
+                
+            block = ''
+            for line in self.__extractBlock('+s2d', False):
+                block += line + '\n'
+                
+            s3d.executeS3D(block, self.output)
 
         else:
             self.error(RuntimeError('%s is not a valid script type!' % script))

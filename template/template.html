@@ -21,7 +21,16 @@
         <script src="/thirdparty/function-plot.js"></script>
         <script type="text/javascript">
 %(s2dData)s
-    </script>
+        </script>
+        <script type="text/javascript">
+function showScript(uid)
+{
+    s = document.getElementById(uid).innerHTML;
+    w = window.open('', '', 'width=600,height=600,resizeable,scrollbars');
+    w.document.write(s);
+    w.document.close();
+}
+        </script>
    
     </head>
     <body>

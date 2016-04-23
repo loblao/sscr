@@ -1,6 +1,7 @@
 from django.utils.html import escape
 
-import texts
+from sscr import texts
+
 import os
 
 with open('template/template.html', 'rb') as f:
