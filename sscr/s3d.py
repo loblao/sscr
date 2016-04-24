@@ -136,9 +136,12 @@ class Dihedral(NodePath):
         self.pointsA = [(0, 0, 0), (0, size, 0), (size, size, 0), (size, 0, 0)]
         self.pointsB = [(0, 0, 0), (0, size, 0), (x, size, y), (x, 0, y)]
 
-    def render(self, scene, alpha=1): 
-        planeA = scene.plane(*self.pointsA, color=RC(alpha))
-        planeB = scene.plane(*self.pointsB, color=RC(alpha))
+    def render(self, scene, color1=None, color2=None): 
+        if color1 is None: color1 = RC(1)
+        if color2 is None: color2 = RC(1)
+
+        planeA = scene.plane(*self.pointsA, color=color1)
+        planeB = scene.plane(*self.pointsB, color=color2)
         
         planeA.wrtReparentTo(self)
         planeB.wrtReparentTo(self)
@@ -146,14 +149,16 @@ class Dihedral(NodePath):
         ind = scene.text((0, .2, .2), 'Dihedral (%d deg)' % self.ang, color=C_WHITE)
         ind.setScale(.55)
         
-    def renderBisector(self, scene, alpha=.75):
+    def renderBisector(self, scene, color=None):
+        if color is None: color = RC(.75)
+
         ang = self.ang / 2
         size = self.size
         x = size * math.cos(ang * math.pi / 180.0)
         y = size * math.sin(ang * math.pi / 180.0)
         points = [(0, 0, 0), (0, size, 0), (x, size, y), (x, 0, y)]
 
-        plane = scene.plane(*points, color=RC(alpha))
+        plane = scene.plane(*points, color=color)
         plane.wrtReparentTo(self)
         
         ind = scene.text((x, size / 2.0, y), 'Bisector', color=C_WHITE)
