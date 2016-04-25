@@ -257,7 +257,14 @@ class Parser:
                 
             except KeyError:
                 self.error(KeyError('unknown matrix: %s' % name))
-        
+                
+        elif self._verifyCmd(cmd, 'system', args, 1, None, False):
+            args = shlex.split(args)
+            o = '$ \\begin{cases} '
+            o += ' \\\\ '.join(args)
+            o += ' \\end{cases} $'
+            self.output.addP(o)
+
         else:
             self.error(RuntimeError('%s is not a valid command!' % cmd))
             
