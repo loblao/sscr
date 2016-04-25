@@ -1,10 +1,6 @@
 from sscr.html import PageGenerator
 from sscr.parser import Parser
 
-from sscr.texts import formatText
-#print formatText(r'Para cargas $ \oplus $')
-#exit()
-
 import argparse
 import glob
 
@@ -33,4 +29,8 @@ for filename in args.filenames:
         p.parse(file)
 
 with open(args.output, 'wb') as f:
-    f.write(gen.output().encode('utf-8'))
+    output = gen.output()
+    if type(output) == unicode:
+        output = output.encode('utf-8')
+
+    f.write(output)

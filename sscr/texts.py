@@ -163,7 +163,7 @@ def formatText(text):
             if text[i] == '|':
                 flag = 1
                 continue
-             
+            
             o += text[i]
             
         elif flag == 1:

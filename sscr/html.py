@@ -22,7 +22,14 @@ class PageGenerator:
         if doFormat:
             text = texts.formatText(text)
             
-        self.body += '<p>%s</p>' % text
+        if type(text) == unicode:
+            text = text.encode('utf-8')
+
+        try:
+            self.body += '<p>%s</p>' % text
+            
+        except UnicodeDecodeError:            
+            self.body += '<p>%s</p>' % text.decode('utf-8')
         
     def addH1(self, h1, center=False):
         self.body += '<h1%s>%s</h1>' % (' align="center"' if center else '', escape(h1))
