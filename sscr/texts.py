@@ -1,6 +1,9 @@
 def formatExpr(expr):
     # ** -> ^
     expr = expr.replace('**', '^')
+    
+    # * can go
+    expr = expr.replace('*', '')
 
     # sqrt(x) -> \sqrt{x}
     while 'sqrt(' in expr:

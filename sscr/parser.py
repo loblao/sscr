@@ -1,4 +1,4 @@
-from sscr import equations, texts, s3d
+from sscr import equations, texts, s3d, matrices
 
 import datetime
 import shlex
@@ -221,7 +221,43 @@ class Parser:
                 plots.append(plot)
             
             self.output.addPlotMult(plots)
-
+            
+        elif self._verifyCmd(cmd, 'matrix', args, 2, None):
+            name, expr = args.split(' ', 1)
+            matrices.matrix(name, expr)
+            
+        elif self._verifyCmd(cmd, 'pmatrix', args, 1, 1):
+            name = args
+            try:
+                matrices.print_matrix(name, self.output)
+                
+            except KeyError:
+                self.error(KeyError('unknown matrix: %s' % name))
+                
+        elif self._verifyCmd(cmd, 'det', args, 1, 1):
+            name = args
+            try:
+                matrices.det(name, self.output)
+                
+            except KeyError:
+                self.error(KeyError('unknown matrix: %s' % name))
+                
+        elif self._verifyCmd(cmd, 'invert', args, 1, 1):
+            name = args
+            try:
+                matrices.inv(name, self.output)
+                
+            except KeyError:
+                self.error(KeyError('unknown matrix: %s' % name))
+                
+        elif self._verifyCmd(cmd, 'transpose', args, 1, 1):
+            name = args
+            try:
+                matrices.transpose(name, self.output)
+                
+            except KeyError:
+                self.error(KeyError('unknown matrix: %s' % name))
+        
         else:
             self.error(RuntimeError('%s is not a valid command!' % cmd))
             
