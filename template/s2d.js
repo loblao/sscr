@@ -29,7 +29,7 @@ function Scene2d(width, height)
     
     rect: function(x, y, w, h)
     {
-        ctx.fillRect(x, y, w, h);
+        ctx.strokeRect(x, y, w, h);
         ctx.stroke();
     },
     
