@@ -136,7 +136,7 @@ class Dihedral(NodePath):
         self.pointsA = [(0, 0, 0), (0, size, 0), (size, size, 0), (size, 0, 0)]
         self.pointsB = [(0, 0, 0), (0, size, 0), (x, size, y), (x, 0, y)]
 
-    def render(self, scene, color1=None, color2=None): 
+    def render(self, scene, color1=None, color2=None, indicator=None): 
         if color1 is None: color1 = RC(1)
         if color2 is None: color2 = RC(1)
 
@@ -146,10 +146,14 @@ class Dihedral(NodePath):
         planeA.wrtReparentTo(self)
         planeB.wrtReparentTo(self)
 
-        ind = scene.text((0, .2, .2), 'Dihedral (%d deg)' % self.ang, color=C_WHITE)
-        ind.setScale(.55)
+        if indicator is not False:
+            if indicator is None:
+                indicator = 'Dihedral (%d deg)' % self.ang
+                
+            ind = scene.text((0, .2, .2), indicator, color=C_WHITE)
+            ind.setScale(.55)
         
-    def renderBisector(self, scene, color=None):
+    def renderBisector(self, scene, color=None, indicator=None):
         if color is None: color = RC(.75)
 
         ang = self.ang / 2
@@ -161,8 +165,12 @@ class Dihedral(NodePath):
         plane = scene.plane(*points, color=color)
         plane.wrtReparentTo(self)
         
-        ind = scene.text((x, size / 2.0, y), 'Bisector', color=C_WHITE)
-        ind.setScale(.55)
+        if indicator is not False:
+            if indicator is None:
+                indicator = 'Bisector'
+            
+            ind = scene.text((x, size / 2.0, y), indicator, color=C_WHITE)
+            ind.setScale(.55)
         
     def getPointOnSurface(self, planeIndex, dist, y=None, scene=None):
         if y is None:
