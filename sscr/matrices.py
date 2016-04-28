@@ -17,7 +17,7 @@ def matrix(name, expr):
     for i in re.findall(RE_MATCH_TAG, expr):
         expr = expr.replace('|%s|' % i, 'MATRIX_CACHE["%s"]' % i)
     
-    from sympy.abc import x, y, z, a, b
+    from sympy.abc import *
     exec 'MATRIX_CACHE["%s"] = Matrix(%s)' % (name, expr)
     
 def print_matrix(name, output, value=None):
@@ -54,5 +54,3 @@ def transpose(name, output):
     transposed = m.inv()
 
     print_matrix(name + '^t', output, transposed)
-    
-    

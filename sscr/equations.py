@@ -17,7 +17,7 @@ def solveEquation(expr):
     if len(members) != 2:
         raise BadFormatException('Bad number of equals.')
             
-    from sympy.abc import x, y, z, a, b
+    from sympy.abc import *
     eq = sympy.Eq(*map(eval, members))
     return [{repr(j): repr(k) for j, k in i.items()} for i in _ensureList(sympy.solve(eq, dict=1))]
     
